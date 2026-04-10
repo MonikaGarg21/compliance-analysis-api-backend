@@ -1,5 +1,5 @@
 import { Auth } from "../models/auth.shcema.js";
-
+import { genToken } from "../../utils/genToken.js";
 //creating controller
 export const signup = async (req, res, next) => {
   try {
@@ -60,8 +60,24 @@ if(!isMatch){
     message: "password is incorrect",
   });
 }
-return res.status(200).json({
+
+
+//token generation
+const token = await genToken(user._id, user.userName);
+console.log(token);
+
+
+return res
+.cookie("token", token,{
+  httpOnly: true,           // it showes it's working on network
+  sameSite: "Strict",         // that same origin is usinng the cookie and is going towards the same origin
+  secure: false,
+  maxAge: 24*60*60*1000,
+})
+.status(200)
+.json({
   message: "Signin successfully",
+  data: user._id,
 });
 
   } catch (err) {
@@ -70,3 +86,5 @@ return res.status(200).json({
     });
   }
 };
+
+
