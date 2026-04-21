@@ -30,12 +30,12 @@ const authSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-authSchema.pre("save", async function (next) {
+authSchema.pre("save", async function () {
     try{
        const salt = await bcrypt.genSalt(10);
        const hashedPassword = await bcrypt.hash(this.password, salt);
        this.password = hashedPassword;
-       next();                 // working as middleware
+                      
     }catch(err){
         console.log(err)
     }
