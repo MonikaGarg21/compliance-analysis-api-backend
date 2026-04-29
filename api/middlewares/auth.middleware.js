@@ -1,4 +1,6 @@
 import jwt from "jsonwebtoken";
+
+
 const protect = async (req, res, next) => {
   try {
     const token = req.cookies.token;
@@ -22,15 +24,36 @@ const protect = async (req, res, next) => {
   }
 };
 
+
+
 export default protect;
 
 export const isAdmin = async (req, res, next) => {
+  
   try {
+    
     if (req.user.role !== "admin") {
       return res.status(403).json({
-        message: "Access Denied",
+        message: "isadmin access Denied",
+       
+      });
+       
+    }
+    next();
+  } catch (err) {
+    res.satus(500).json({messsage: err.message});
+  }
+};
+
+export const isUser = async (req, res, next) => {
+  try {
+    console.log(req.user.role)
+    if (req.user.role !== "user") {
+      return res.status(403).json({
+        message: "isUser Access Denied",
       });
     }
+
     next();
   } catch (err) {
     res.satus(500).json({messsage: err.message});

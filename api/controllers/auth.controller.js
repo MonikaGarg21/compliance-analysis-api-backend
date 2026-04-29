@@ -63,7 +63,7 @@ if(!isMatch){
 
 
 //token generation
-const token = await genToken(user._id, user.userName);
+const token = await genToken(user._id, user.userName,user.role);
 console.log(token);
 
 

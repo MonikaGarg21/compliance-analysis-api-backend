@@ -20,6 +20,8 @@ const productSchema = new mongoose.Schema(
       ref: "Auth",
     },
 
+    
+
     // Basic Info
     productName: {
       type: String,
@@ -43,7 +45,6 @@ const productSchema = new mongoose.Schema(
       {
         url: String,
         publicId: String,
-        label: String,
       },
     ],
     //regulatory:

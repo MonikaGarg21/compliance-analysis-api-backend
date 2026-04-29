@@ -5,7 +5,8 @@ import authrouter from "./api/routes/auth.routes.js";
 import cookieParser from "cookie-parser";
 import organisation from "./api/routes/orgainsation.routes.js"
 import framework from "./api/routes/framework.routes.js"
-
+import product from "./api/routes/product.routes.js"
+import cors from "cors"
 
 
 dotenv.config();
@@ -16,10 +17,22 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
+// cors:
+app.use(
+    cors({
+        origin:"http://localhost:5173",
+        methods:["GET","POST","PUT","PATCH","DELETE"],
+        Credentials:true,
+    })
+);
+
+
+
 // route
 app.use("/api/auth", authrouter);
 app.use("/api/organisation",organisation );
 app.use("/api/framework",framework );
+app.use("/api/product",product);
 
 // http://localhost:5000/api/auth/signup
 
