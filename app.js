@@ -22,10 +22,9 @@ app.use(
     cors({
         origin:"http://localhost:5173",
         methods:["GET","POST","PUT","PATCH","DELETE"],
-        Credentials:true,
+        credentials:true,
     })
 );
-
 
 
 // route

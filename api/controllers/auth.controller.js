@@ -46,7 +46,8 @@ export const signin = async (req, res, next) => {
       });
     }
 
-    const user = await Auth.findOne({ email: email });
+    const user = await Auth.findOne({ email: email }).select("-password");
+    console.log(user);
     if (!user) {
       return res.status(400).json({
         message: "Email not found",
@@ -54,37 +55,36 @@ export const signin = async (req, res, next) => {
     }
 
     // password compare
-const isMatch = await user.comparePassword(password);
-if(!isMatch){
-  return res.status(400).json({
-    message: "password is incorrect",
-  });
-}
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(400).json({
+        message: "password is incorrect",
+      });
+    }
 
+    //token generation
+    const token = await genToken(user._id, user.userName, user.role);
+    console.log(token);
 
-//token generation
-const token = await genToken(user._id, user.userName,user.role);
-console.log(token);
-
-
-return res
-.cookie("token", token,{
-  httpOnly: true,           // it showes it's working on network
-  sameSite: "Strict",         // that same origin is usinng the cookie and is going towards the same origin
-  secure: false,
-  maxAge: 24*60*60*1000,
-})
-.status(200)
-.json({
-  message: "Signin successfully",
-  data: user._id,
-});
-
+    return res
+      .cookie("token", token, {
+        httpOnly: true, // it showes it's working on network
+        sameSite: "Strict", // that same origin is usinng the cookie and is going towards the same origin
+        secure: false,
+        maxAge: 24 * 60 * 60 * 1000,
+      })
+      .status(200)
+      .json({
+        message: "Signin successfully",
+        data: {
+          _id: user._id,
+          name: user.userName,
+          role: user.role,
+        },
+      });
   } catch (err) {
     return res.status(500).json({
       message: err.message,
     });
   }
 };
-
-
